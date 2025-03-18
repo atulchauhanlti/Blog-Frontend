@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const AuthGuard = () => {
   // Access `isAuth` state from Redux store
   const isAuth = useSelector((state) => !!state.auth.token);
-  console.log(isAuth)
+
   return isAuth ? <PrivateRouter /> : <PublicRouter />;
 };
 

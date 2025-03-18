@@ -19,7 +19,7 @@ class API {
   static postSecureRequest(endPoint, data) {
     const config = {
       headers: {
-        'Auth-Token': Auth.getToken(),
+        'Authorization': `Bearer ${Auth.getToken()}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -31,9 +31,8 @@ class API {
   static postSecureFormDataRequest(endPoint, data) {
     const config = {
       headers: {
-        'Auth-Token': Auth.getToken(),
-        // Accept: "application/json",
-        // "Content-Type": "application/json",
+        'Authorization': `Bearer ${Auth.getToken()}`,
+        "Content-Type": "multipart/form-data",
       },
       credentials: 'include'
     };
@@ -44,7 +43,7 @@ class API {
    static putSecureRequest(endPoint, data) {
     const config = {
       headers: {
-        'auth-token': Auth.getToken(),
+        'Authorization': `Bearer ${Auth.getToken()}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -57,7 +56,7 @@ class API {
   static getSecureRequests(endPoint) {
     const config = {
       headers: {
-        'auth-token': Auth.getToken(),
+        'Authorization': `Bearer ${Auth.getToken()}`,
         'Accept': "application/json",
       },
       credentials: 'include'

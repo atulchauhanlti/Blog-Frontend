@@ -12,10 +12,8 @@ function App() {
     const token = Auth.getToken();
 
     if (token && Auth.isUserAuthenticated()) {
-      // Use the setToken action to sync the token with Redux
-      dispatch(setToken({ token, user: null })); // Replace `user: null` with user data if available
+      dispatch(setToken({ token, user: null })); 
     } else {
-      // If no valid token, log out the user
       dispatch(logout());
     }
   }, [dispatch]);

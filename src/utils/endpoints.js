@@ -9,8 +9,8 @@ export const api = {
     roles: "/users/roles",
   },
   posts: {
-    addPost: "/Posts", 
-    getPosts: "/Posts/search", 
+    addPost: "/Posts/create", 
+    getPosts: "/Posts/All", 
     updatePost: "/Posts/slug",
     deletePost: "/Posts/1", 
     getPostsByCategory: "/Posts/category",

@@ -5,10 +5,9 @@ import { api } from "../../utils/endpoints";
 
 export const loginUser = createAsyncThunk(api.auth.login, async (credentials, thunkAPI) => {
   try {
-    const response = await API.postRequest(api.auth.login, credentials); // Use API utility
+    const response = await API.postRequest(api.auth.login, credentials); 
     const { token } = response.data;
 
-    // Save token to cookies/local storage
     Auth.authenticateUser(token);
     return response.data;
   } catch (error) {

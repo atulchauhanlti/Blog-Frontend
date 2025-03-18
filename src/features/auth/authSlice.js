@@ -11,15 +11,14 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
-    // Logout action
     logout(state) {
       state.user = null;
       state.token = null;
-      Auth.deauthenticateUser(); // Clear token from cookies
+      Auth.deauthenticateUser(); 
     },
     setToken(state, action) {
       state.token = action.payload.token;
-      state.user = action.payload.user || null; // Optional: If user data is provided
+      state.user = action.payload.user || null; 
     },
   },
   extraReducers: (builder) => {
@@ -33,7 +32,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
 
-        Auth.authenticateUser(action.payload.token); // Save token to cookies
+        Auth.authenticateUser(action.payload.token); 
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

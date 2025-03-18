@@ -19,7 +19,7 @@ const PrivateLayout = () => {
     }, [dispatch]);
 
     if (!isAuth) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/" />;
     }
 
     return (
