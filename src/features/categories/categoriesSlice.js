@@ -8,6 +8,12 @@ export const fetchCategories = createAsyncThunk("categories/fetchCategories", as
   return response.data;
 });
 
+// Thunk to add a new category
+export const createCategory = createAsyncThunk("categories/createCategory", async (newCategory) => {
+  const response = await API.postSecureRequest(api.categories.addCategory, newCategory);
+  return response.data;
+});
+
 const categoriesSlice = createSlice({
   name: "categories",
   initialState: {
@@ -26,6 +32,17 @@ const categoriesSlice = createSlice({
         state.categories = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(createCategory.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createCategory.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.categories.push(action.payload); // Add the new category to the state
+      })
+      .addCase(createCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

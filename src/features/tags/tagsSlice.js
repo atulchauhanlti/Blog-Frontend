@@ -8,6 +8,12 @@ export const fetchTags = createAsyncThunk("tags/fetchTags", async () => {
   return response.data;
 });
 
+// Thunk to add a new tag
+export const createTag = createAsyncThunk("tags/createTag", async (newTag) => {
+  const response = await API.postSecureRequest(api.tags.addTag, newTag);
+  return response.data;
+});
+
 const tagsSlice = createSlice({
   name: "tags",
   initialState: {
@@ -26,6 +32,17 @@ const tagsSlice = createSlice({
         state.tags = action.payload;
       })
       .addCase(fetchTags.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(createTag.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createTag.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.tags.push(action.payload); // Add the new tag to the state
+      })
+      .addCase(createTag.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
