@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories, createCategory } from "../../../features/categories/categoriesSlice";
+import { fetchCategories, createCategory, editCategory, deleteCategory } from "../../../features/categories/categoriesSlice";
 
 const CategoryLists = () => {
   const dispatch = useDispatch();
   const { categories, status, error } = useSelector((state) => state.categories);
 
   const [showModal, setShowModal] = useState(false); // Modal visibility state
-  const [categoryName, setCategoryName] = useState(""); // New category input state
+  const [categoryName, setCategoryName] = useState(""); // Input for new/edit category name
+  const [editingCategory, setEditingCategory] = useState(null); // Track the category being edited
 
   // Fetch categories on component mount
   useEffect(() => {
@@ -16,17 +17,41 @@ const CategoryLists = () => {
     }
   }, [dispatch, categories.length]);
 
-  const handleCreateCategory = (e) => {
+  const handleCreateOrEditCategory = (e) => {
     e.preventDefault();
     if (categoryName.trim()) {
-      dispatch(createCategory({ name: categoryName }))
-        .then(() => {
-          console.log("Category created successfully!");
-          setCategoryName(""); // Clear input field
-          setShowModal(false); // Close modal after submission
-        })
-        .catch((err) => console.error("Error creating category:", err));
+      if (editingCategory) {
+        // Edit existing category
+        dispatch(editCategory({ id: editingCategory.id, updatedData: { name: categoryName } }))
+          .then(() => {
+            console.log("Category updated successfully!");
+            resetForm();
+          })
+          .catch((err) => console.error("Error updating category:", err));
+      } else {
+        // Create new category
+        dispatch(createCategory({ name: categoryName }))
+          .then(() => {
+            console.log("Category created successfully!");
+            resetForm();
+          })
+          .catch((err) => console.error("Error creating category:", err));
+      }
     }
+  };
+
+  const handleDeleteCategory = (id) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      dispatch(deleteCategory(id))
+        .then(() => console.log("Category deleted successfully!"))
+        .catch((err) => console.error("Error deleting category:", err));
+    }
+  };
+
+  const resetForm = () => {
+    setCategoryName("");
+    setEditingCategory(null);
+    setShowModal(false);
   };
 
   if (status === "loading") return <p>Loading...</p>;
@@ -38,8 +63,8 @@ const CategoryLists = () => {
       <button
         className="btn btn-primary mb-3"
         onClick={() => {
-          console.log("Opening modal...");
-          setShowModal(true); // Ensure this is triggered
+          setShowModal(true);
+          setEditingCategory(null); // Ensure we are adding a new category
         }}
       >
         + Add Category
@@ -54,19 +79,33 @@ const CategoryLists = () => {
         </thead>
         <tbody>
           {categories.map((category, index) => (
-            <tr key={index}>
+            <tr key={category.id}>
               <td>{index + 1}</td>
               <td>{category.name}</td>
               <td>
-                <button className="btn btn-warning btn-sm me-2">Edit</button>
-                <button className="btn btn-danger btn-sm">Delete</button>
+                <button
+                  className="btn btn-warning btn-sm me-2"
+                  onClick={() => {
+                    setEditingCategory(category);
+                    setCategoryName(category.name);
+                    setShowModal(true);
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDeleteCategory(category.id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Add Category Modal */}
+      {/* Modal */}
       {showModal && (
         <div
           className="modal show d-block"
@@ -76,21 +115,22 @@ const CategoryLists = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Add Category</h5>
+                <h5 className="modal-title">
+                  {editingCategory ? "Edit Category" : "Add Category"}
+                </h5>
                 <button
                   type="button"
                   className="btn-close"
                   aria-label="Close"
-                  onClick={() => {
-                    console.log("Closing modal...");
-                    setShowModal(false); // Ensure this is triggered
-                  }}
+                  onClick={resetForm}
                 ></button>
               </div>
-              <form onSubmit={handleCreateCategory}>
+              <form onSubmit={handleCreateOrEditCategory}>
                 <div className="modal-body">
                   <div className="mb-3">
-                    <label htmlFor="categoryName" className="form-label">Category Name</label>
+                    <label htmlFor="categoryName" className="form-label">
+                      Category Name
+                    </label>
                     <input
                       type="text"
                       id="categoryName"
@@ -106,14 +146,13 @@ const CategoryLists = () => {
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => {
-                      console.log("Closing modal from cancel button...");
-                      setShowModal(false);
-                    }}
+                    onClick={resetForm}
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary">Add Category</button>
+                  <button type="submit" className="btn btn-primary">
+                    {editingCategory ? "Save Changes" : "Add Category"}
+                  </button>
                 </div>
               </form>
             </div>
