@@ -1,22 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import './styles/App.css';
-import UserRoutes from './routes/UserRoutes';
-import AdminRoutes from './routes/AdminRoutes';
-import NotFound from './components/Shared/NotFound'; // For unmatched routes
+import Router from "./routes/Router";
+import Auth from "./utils/auth";
 
 function App() {
-  return (
-    <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/*" element={<UserRoutes />} />
-          <Route path="/admin/*" element={<AdminRoutes />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </div>
-  );
+  const isLoggedOut = Auth.isUserAuthenticated();
+  useEffect(() => {
+    if (!isLoggedOut) localStorage.clear();
+  }, [isLoggedOut]);
+
+  return <Router />;
 }
 
 export default App;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import AdminDashboard from '../pages/Admin/AdminDashboard';
-import BlogManagement from '../components/Admin/BlogManagement';
-import NotFound from '../components/Shared/NotFound';
+import AdminDashboard from '../../pages/Admin/AdminDashboard';
+import BlogManagement from '../../components/Admin/BlogManagement';
+import NotFound from '../../components/Shared/NotFound';
 
 function AdminRoutes() {
   return (
