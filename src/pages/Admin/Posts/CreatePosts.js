@@ -5,6 +5,10 @@ import Select from "react-select";
 import { fetchCategories } from "../../../features/categories/categoriesSlice";
 import { fetchTags } from "../../../features/tags/tagsSlice";
 import { createPost, resetCreateStatus } from "../../../features/posts/postsSlice";
+import { Editor } from "react-draft-wysiwyg";
+import { convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const CreatePosts = () => {
   const dispatch = useDispatch();
@@ -13,6 +17,7 @@ const CreatePosts = () => {
   const { tags, status: tagsStatus } = useSelector((state) => state.tags);
   const { status: createStatus, error: createError } = useSelector((state) => state.posts);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [editorState, setEditorState] = useState();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -62,6 +67,17 @@ const CreatePosts = () => {
     }));
   };
 
+  const handleEditorChange = (newEditorState) => {
+    setEditorState(newEditorState);
+
+    // Convert editor content to HTML and update the formData's content field
+    const contentAsHtml = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
+    setFormData((prev) => ({
+      ...prev,
+      content: contentAsHtml,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true); 
@@ -70,33 +86,13 @@ const CreatePosts = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="mb-4">Create a New Post</h1>
-      {createStatus === "failed" && <p className="text-danger">{createError}</p>}
-      {createStatus === "succeeded" && <p className="text-success">Post created successfully!</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="title" className="form-label">Title</label>
-          <input
-            type="text"
-            className="form-control"
-            id="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Enter the post title"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="content" className="form-label">Content</label>
-          <textarea
-            className="form-control"
-            id="content"
-            rows="5"
-            value={formData.content}
-            onChange={handleChange}
-            placeholder="Enter the post content"
-          ></textarea>
-        </div>
-        <div className="mb-3">
+    <h1 className="mb-4">Create a New Post</h1>
+    {createStatus === "failed" && <p className="text-danger">{createError}</p>}
+    {createStatus === "succeeded" && <p className="text-success">Post created successfully!</p>}
+    <form onSubmit={handleSubmit}>
+      <div className="row">
+        {/* Category Field */}
+        <div className="col-6 mb-3">
           <label htmlFor="categoryId" className="form-label">Category</label>
           <select
             className="form-select"
@@ -112,7 +108,9 @@ const CreatePosts = () => {
             ))}
           </select>
         </div>
-        <div className="mb-3">
+  
+        {/* Tag Field */}
+        <div className="col-6 mb-3">
           <label htmlFor="tagIds" className="form-label">Tags</label>
           <Select
             id="tagIds"
@@ -124,7 +122,22 @@ const CreatePosts = () => {
             classNamePrefix="select"
           />
         </div>
-        <div className="mb-3">
+  
+        {/* Title Field */}
+        <div className="col-6 mb-3">
+          <label htmlFor="title" className="form-label">Title</label>
+          <input
+            type="text"
+            className="form-control"
+            id="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Enter the post title"
+          />
+        </div>
+  
+        {/* Image Field */}
+        <div className="col-6 mb-3">
           <label htmlFor="imageFile" className="form-label">Upload Image</label>
           <input
             type="file"
@@ -133,9 +146,23 @@ const CreatePosts = () => {
             onChange={handleFileChange}
           />
         </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
-      </form>
-    </div>
+  
+        {/* Content Field */}
+        <div className="col-12 mb-3">
+          <label htmlFor="content" className="form-label">Content</label>
+          <Editor
+            editorState={editorState}
+            onEditorStateChange={handleEditorChange}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName="editorClassName"
+          />
+        </div>
+      </div>
+  
+      <button type="submit" className="btn btn-primary">Submit</button>
+    </form>
+  </div>  
   );
 };
 

@@ -2,3 +2,12 @@
     margin-left: 10px;
 }
   
+
+.editorClassName {
+    background-color: white; /* Change to a contrasting color */
+    color: black; /* Ensure text is visible */
+    min-height: 200px; /* Set a minimum height for visibility */
+    padding: 10px; /* Add some padding for spacing */
+    border: 1px solid #ccc; /* Add a border for clarity */
+    border-radius: 5px; /* Rounded corners */
+}
