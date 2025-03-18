@@ -1,11 +1,13 @@
-import React from 'react'
-import PrivateRouter from '../privateRoutes/PrivateRouter';
-import PublicRouter from '../publicRoutes/PublicRouter';
+import React from "react";
+import PrivateRouter from "../privateRoutes/PrivateRouter";
+import PublicRouter from "../publicRoutes/PublicRouter";
+import { useSelector } from "react-redux";
 
 const AuthGuard = () => {
-    // const isAuth = useAuthStore(state=>state.isAuth);
-    const isAuth = false;
-    return isAuth ? <PrivateRouter /> : <PublicRouter />
-}
+  // Access `isAuth` state from Redux store
+  const isAuth = useSelector((state) => !!state.auth.token);
+  console.log(isAuth)
+  return isAuth ? <PrivateRouter /> : <PublicRouter />;
+};
 
-export default AuthGuard
+export default AuthGuard;

@@ -1,30 +1,35 @@
-// export const BASE_URL = "http://localhost:9000/api" // local
-export const BASE_URL = "https://naac-dev.techicious.store/api" // prod
+// Base URL for the API
+export const BASE_URL = "http://localhost:44301/api"; 
 
+// Updated API structure
 export const api = {
   auth: {
     login: "/auth/login",
     logout: "/auth/signup",
-    roles: "/users/roles"
+    roles: "/users/roles",
   },
-  criterion: {
-    sessions:'/sessions',
-    criterions: "/criteria",
-    questions: "/criteria/questions",
-    answers: "/answers",
-    fileUpload: "/answers/uploadfile",
-    options:"/questions/options",
-    getAnswers: "/answers/subcriteria"
+  posts: {
+    addPost: "/Posts", 
+    getPosts: "/Posts/search", 
+    updatePost: "/Posts/slug",
+    deletePost: "/Posts/1", 
+    getPostsByCategory: "/Posts/category",
+    getPostsByTag: "/Posts/tag", 
+    getPostsByUser: "/Posts/user", 
+    getPostBySlug: "/Posts/slug",
   },
-  coc: {
-    committees: "/committee",
-    conveners: "/committee/users",
-    types: "/committee/types",
-    nextTypes: "/committee/nexttype",
-    getQuestions: "/committee/questions",
-    addDescription: "/committee/questions/add/description",
-    answers: "/coc/answers",
-    getAnswers: "/coc/answers",
-    fileUpload: "/coc/answers/uploadfile",
-  }
+  categories: {
+    getCategories: "/Categories", 
+    addCategory: "/Categories",
+    getCategoryById: "/Categories",
+    updateCategory: "/Categories",
+    deleteCategory: "/Categories",
+  },
+  tags: {
+    getTags: "/Tags", 
+    addTag: "/Tags", 
+    getTagById: "/Tags", 
+    updateTag: "/Tags", 
+    deleteTag: "/Tags", 
+  },
 };
