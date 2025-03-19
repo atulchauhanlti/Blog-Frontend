@@ -8,10 +8,9 @@ const PostLists = () => {
   const location = useLocation();
   const { posts, status, error } = useSelector((state) => state.posts);
 
-  const BASE_URL = "http://localhost:44301/"; // Your .NET Core API base URL
+  const BASE_URL = "http://localhost:44301/"; 
 
   useEffect(() => {
-    // Always fetch posts when the component mounts
     if (!posts.length || location.state?.refreshPosts) {
       dispatch(fetchPosts());
     }
@@ -44,7 +43,7 @@ const PostLists = () => {
               <td>
                 {post.imageUrl ? (
                   <img
-                    src={`${BASE_URL}${post.imageUrl.replace(/\\/g, "/")}`} // Construct the full image URL
+                    src={`${BASE_URL}${post.imageUrl.replace(/\\/g, "/")}`}
                     alt={post.title}
                     style={{ width: "100px", height: "auto" }}
                   />

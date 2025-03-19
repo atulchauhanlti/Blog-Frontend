@@ -70,7 +70,6 @@ const CreatePosts = () => {
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
 
-    // Convert editor content to HTML and update the formData's content field
     const contentAsHtml = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
     setFormData((prev) => ({
       ...prev,
@@ -91,7 +90,6 @@ const CreatePosts = () => {
     {createStatus === "succeeded" && <p className="text-success">Post created successfully!</p>}
     <form onSubmit={handleSubmit}>
       <div className="row">
-        {/* Category Field */}
         <div className="col-6 mb-3">
           <label htmlFor="categoryId" className="form-label">Category</label>
           <select
@@ -109,7 +107,6 @@ const CreatePosts = () => {
           </select>
         </div>
   
-        {/* Tag Field */}
         <div className="col-6 mb-3">
           <label htmlFor="tagIds" className="form-label">Tags</label>
           <Select
@@ -123,7 +120,6 @@ const CreatePosts = () => {
           />
         </div>
   
-        {/* Title Field */}
         <div className="col-6 mb-3">
           <label htmlFor="title" className="form-label">Title</label>
           <input
@@ -136,7 +132,6 @@ const CreatePosts = () => {
           />
         </div>
   
-        {/* Image Field */}
         <div className="col-6 mb-3">
           <label htmlFor="imageFile" className="form-label">Upload Image</label>
           <input
@@ -146,8 +141,7 @@ const CreatePosts = () => {
             onChange={handleFileChange}
           />
         </div>
-  
-        {/* Content Field */}
+
         <div className="col-12 mb-3">
           <label htmlFor="content" className="form-label">Content</label>
           <Editor

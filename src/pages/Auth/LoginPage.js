@@ -12,7 +12,7 @@ const LoginPage = () => {
       alert("Email and Password are required!");
       return;
     }
-    dispatch(loginUser({ UsernameOrEmail, Password })); // Dispatch login action
+    dispatch(loginUser({ UsernameOrEmail, Password }));
   };
 
   return (

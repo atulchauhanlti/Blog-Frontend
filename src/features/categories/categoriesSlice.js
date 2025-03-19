@@ -2,30 +2,26 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../utils/calls";
 import { api } from "../../utils/endpoints";
 
-// Thunk to fetch categories
 export const fetchCategories = createAsyncThunk("categories/fetchCategories", async () => {
   const response = await API.getSecureRequests(api.categories.getCategories);
   return response.data;
 });
 
-// Thunk to add a new category
 export const createCategory = createAsyncThunk("categories/createCategory", async (newCategory) => {
   const response = await API.postSecureRequest(api.categories.addCategory, newCategory);
   return response.data;
 });
 
-// Thunk to edit a category
 export const editCategory = createAsyncThunk("categories/editCategory", async ({ id, updatedData }) => {
-  const endpoint = api.categories.updateCategory.replace("{id}", id); // Replace {id} with actual id
+  const endpoint = api.categories.updateCategory.replace("{id}", id); 
   const response = await API.putSecureRequest(endpoint, updatedData);
   return response.data;
 });
 
-// Thunk to delete a category
 export const deleteCategory = createAsyncThunk("categories/deleteCategory", async (id) => {
-  const endpoint = api.categories.deleteCategory.replace("{id}", id); // Replace {id} with actual id
+  const endpoint = api.categories.deleteCategory.replace("{id}", id); 
   await API.deleteSecureRequest(endpoint);
-  return id; // Return the deleted category's ID
+  return id;
 });
 
 const categoriesSlice = createSlice({
@@ -54,7 +50,7 @@ const categoriesSlice = createSlice({
       })
       .addCase(createCategory.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.categories.push(action.payload); // Add the new category to the state
+        state.categories.push(action.payload); 
       })
       .addCase(createCategory.rejected, (state, action) => {
         state.status = "failed";

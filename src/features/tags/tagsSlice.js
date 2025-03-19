@@ -2,13 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../utils/calls";
 import { api } from "../../utils/endpoints";
 
-// Thunk to fetch tags
 export const fetchTags = createAsyncThunk("tags/fetchTags", async () => {
   const response = await API.getSecureRequests(api.tags.getTags);
   return response.data;
 });
 
-// Thunk to add a new tag
 export const createTag = createAsyncThunk("tags/createTag", async (newTag) => {
   const response = await API.postSecureRequest(api.tags.addTag, newTag);
   return response.data;
@@ -40,7 +38,7 @@ const tagsSlice = createSlice({
       })
       .addCase(createTag.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.tags.push(action.payload); // Add the new tag to the state
+        state.tags.push(action.payload);
       })
       .addCase(createTag.rejected, (state, action) => {
         state.status = "failed";

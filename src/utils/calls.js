@@ -64,6 +64,18 @@ class API {
 
     return axios.get(BASE_URL + endPoint, config);
   }
+
+  // GET SECURE REQUEST
+  static getRequests(endPoint) {
+    const config = {
+      headers: {
+        'Accept': "application/json",
+      },
+      credentials: 'include'
+    };
+
+    return axios.get(BASE_URL + endPoint, config);
+  }
 }
 
 export default API;

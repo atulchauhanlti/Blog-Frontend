@@ -6,11 +6,10 @@ const CategoryLists = () => {
   const dispatch = useDispatch();
   const { categories, status, error } = useSelector((state) => state.categories);
 
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
-  const [categoryName, setCategoryName] = useState(""); // Input for new/edit category name
-  const [editingCategory, setEditingCategory] = useState(null); // Track the category being edited
+  const [showModal, setShowModal] = useState(false); 
+  const [categoryName, setCategoryName] = useState(""); 
+  const [editingCategory, setEditingCategory] = useState(null); 
 
-  // Fetch categories on component mount
   useEffect(() => {
     if (!categories.length) {
       dispatch(fetchCategories());
@@ -21,7 +20,6 @@ const CategoryLists = () => {
     e.preventDefault();
     if (categoryName.trim()) {
       if (editingCategory) {
-        // Edit existing category
         dispatch(editCategory({ id: editingCategory.id, updatedData: { name: categoryName } }))
           .then(() => {
             console.log("Category updated successfully!");
@@ -29,7 +27,6 @@ const CategoryLists = () => {
           })
           .catch((err) => console.error("Error updating category:", err));
       } else {
-        // Create new category
         dispatch(createCategory({ name: categoryName }))
           .then(() => {
             console.log("Category created successfully!");
@@ -64,7 +61,7 @@ const CategoryLists = () => {
         className="btn btn-primary mb-3"
         onClick={() => {
           setShowModal(true);
-          setEditingCategory(null); // Ensure we are adding a new category
+          setEditingCategory(null);
         }}
       >
         + Add Category

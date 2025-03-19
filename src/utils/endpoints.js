@@ -13,7 +13,7 @@ export const api = {
     getPosts: "/Posts/All", 
     updatePost: "/Posts/{id}",
     deletePost: "/Posts/{id}", 
-    getPostsByCategory: "/Posts/category",
+    getPostsByCategory: "/Posts/category/{category}",
     getPostsByTag: "/Posts/tag", 
     getPostsByUser: "/Posts/user", 
     getPostById: "/Posts/{id}",

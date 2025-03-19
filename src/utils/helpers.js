@@ -13,3 +13,7 @@ export const isFileUrl = (value) => {
     }
     return false
 }
+
+export const stripHtmlTags = (content) => {
+  return content.replace(/<\/?[^>]+(>|$)/g, ""); 
+};

@@ -1,70 +1,98 @@
-import React from 'react'
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPostsByCategory } from "../../../features/posts/postsSlice";
+import { stripHtmlTags } from "../../../utils/helpers";
+import { Link } from "react-router-dom";
+
+const BASE_URL = "http://localhost:44301/";
 
 const BusinessBlogsSection = () => {
+  const dispatch = useDispatch();
+  const { businessPosts, status } = useSelector((state) => state.posts);
+
+  useEffect(() => {
+    dispatch(fetchPostsByCategory("Business"));
+  }, [dispatch]);
+
+  const limitedPosts = businessPosts.slice(0, 5);
+
   return (
     <section className="section posts-entry">
       <div className="container">
-          <div className="row mb-4">
-              <div className="col-sm-6">
-                  <h2 className="posts-entry-title">Business</h2>
-              </div>
-              <div className="col-sm-6 text-sm-end"><a href="category.html" className="read-more">View All</a></div>
+        <div className="row mb-4">
+          <div className="col-sm-6">
+            <h2 className="posts-entry-title">Business</h2>
           </div>
-          <div className="row g-3">
+          <div className="col-sm-6 text-sm-end">
+            <Link to="/blog/category/Business" className="read-more">
+              View All
+            </Link>
+          </div>
+        </div>
+        <div className="row g-3">
+          {status === "loading" && <p>Loading...</p>}
+          {status === "failed" && <p>Failed to fetch posts. Try again later.</p>}
+          {status === "succeeded" && limitedPosts.length === 0 && (
+            <p>No posts available in the "Business" category.</p>
+          )}
+          {status === "succeeded" && (
+            <>
               <div className="col-md-9">
-                  <div className="row g-3">
-                      <div className="col-md-6">
-                          <div className="blog-entry">
-                              <a href="single.html" className="img-link">
-                                  <img src="../../assets/images/img_1_sq.jpg" alt="Image" className="img-fluid" />
-                              </a>
-                              <span className="date">Apr. 14th, 2022</span>
-                              <h2><a href="single.html">Thought you loved Python? Wait until you meet Rust</a></h2>
-                              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, nobis ea quis inventore vel voluptas.</p>
-                              <p><a href="single.html" className="btn btn-sm btn-outline-primary">Read More</a></p>
-                          </div>
+                <div className="row g-3">
+                  {limitedPosts.slice(0, 2).map((post) => (
+                    <div className="col-md-6" key={post.id}>
+                      <div className="blog-entry">
+                        <Link to={`/blog/${post.slug}`} className="img-link">
+                          {post.imageUrl ? (
+                            <img
+                              src={`${BASE_URL}${post.imageUrl.replace(/\\/g, "/")}`}
+                              alt={post.title}
+                              className="image-fixed"
+                            />
+                          ) : (
+                            <div className="no-image-placeholder">No Image</div>
+                          )}
+                        </Link>
+                        <span className="date">{new Date(post.publishedAt).toLocaleDateString()}</span>
+                        <h2>
+                          <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+                        </h2>
+                        <p>{stripHtmlTags(post.content).substring(0, 100)}...</p>
+                        <p>
+                          <Link to={`/blog/${post.slug}`} className="btn btn-sm btn-outline-primary">
+                            Read More
+                          </Link>
+                        </p>
                       </div>
-                      <div className="col-md-6">
-                          <div className="blog-entry">
-                              <a href="single.html" className="img-link">
-                                  <img src="../../assets/images/img_2_sq.jpg" alt="Image" className="img-fluid" />
-                              </a>
-                              <span className="date">Apr. 14th, 2022</span>
-                              <h2><a href="single.html">Startup vs corporate: What job suits you best?</a></h2>
-                              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, nobis ea quis inventore vel voluptas.</p>
-                              <p><a href="single.html" className="btn btn-sm btn-outline-primary">Read More</a></p>
-                          </div>
-                      </div>
-                  </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+
               <div className="col-md-3">
-                  <ul className="list-unstyled blog-entry-sm">
-                      <li>
-                          <span className="date">Apr. 14th, 2022</span>
-                          <h3><a href="single.html">Don’t assume your user data in the cloud is safe</a></h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, nobis ea quis inventore vel voluptas.</p>
-                          <p><a href="#" className="read-more">Continue Reading</a></p>
-                      </li>
-
-                      <li>
-                          <span className="date">Apr. 14th, 2022</span>
-                          <h3><a href="single.html">Meta unveils fees on metaverse sales</a></h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, nobis ea quis inventore vel voluptas.</p>
-                          <p><a href="#" className="read-more">Continue Reading</a></p>
-                      </li>
-
-                      <li>
-                          <span className="date">Apr. 14th, 2022</span>
-                          <h3><a href="single.html">UK sees highest inflation in 30 years</a></h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, nobis ea quis inventore vel voluptas.</p>
-                          <p><a href="#" className="read-more">Continue Reading</a></p>
-                      </li>
-                  </ul>
+                <ul className="list-unstyled blog-entry-sm">
+                  {limitedPosts.slice(2).map((post) => (
+                    <li key={post.id}>
+                      <span className="date">{new Date(post.publishedAt).toLocaleDateString()}</span>
+                      <h3>
+                        <a href={`single.html?slug=${post.slug}`}>{post.title}</a>
+                      </h3>
+                      <p>{stripHtmlTags(post.content).substring(0, 100)}...</p>
+                      <p>
+                        <a href={`single.html?slug=${post.slug}`} className="read-more">
+                          Continue Reading
+                        </a>
+                      </p>
+                    </li>
+                  ))}
+                </ul>
               </div>
-          </div>
+            </>
+          )}
+        </div>
       </div>
-  </section>
-  )
-}
+    </section>
+  );
+};
 
-export default BusinessBlogsSection
+export default BusinessBlogsSection;

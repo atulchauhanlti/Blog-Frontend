@@ -6,10 +6,9 @@ const TagLists = () => {
   const dispatch = useDispatch();
   const { tags, status, error } = useSelector((state) => state.tags);
 
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
-  const [tagName, setTagName] = useState(""); // Input state for new tag
+  const [showModal, setShowModal] = useState(false); 
+  const [tagName, setTagName] = useState("");
 
-  // Fetch tags when the component mounts
   useEffect(() => {
     if (!tags.length) {
       dispatch(fetchTags());
@@ -21,8 +20,8 @@ const TagLists = () => {
     if (tagName.trim()) {
       dispatch(createTag({ name: tagName }))
         .then(() => {
-          setTagName(""); // Clear input field
-          setShowModal(false); // Close modal after submission
+          setTagName(""); 
+          setShowModal(false);
         })
         .catch((err) => console.error("Error creating tag:", err));
     }
@@ -36,7 +35,7 @@ const TagLists = () => {
       <h2>Tag List</h2>
       <button
         className="btn btn-primary mb-3"
-        onClick={() => setShowModal(true)} // Open modal on button click
+        onClick={() => setShowModal(true)}
       >
         + Add Tag
       </button>
@@ -62,7 +61,6 @@ const TagLists = () => {
         </tbody>
       </table>
 
-      {/* Add Tag Modal */}
       {showModal && (
         <div
           className="modal show d-block"
@@ -77,7 +75,7 @@ const TagLists = () => {
                   type="button"
                   className="btn-close"
                   aria-label="Close"
-                  onClick={() => setShowModal(false)} // Close modal
+                  onClick={() => setShowModal(false)} 
                 ></button>
               </div>
               <form onSubmit={handleCreateTag}>
@@ -99,7 +97,7 @@ const TagLists = () => {
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => setShowModal(false)} // Close modal
+                    onClick={() => setShowModal(false)} 
                   >
                     Cancel
                   </button>
