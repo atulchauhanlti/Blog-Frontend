@@ -11,6 +11,10 @@ const BlogDetailsPage = () => {
     const dispatch = useDispatch();
     const { slugPost, status } = useSelector((state) => state.posts);
 
+    const [name, setName] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [content, setContent] = React.useState("");
+
     useEffect(() => {
         if (slug) {
             dispatch(fetchPostBySlug(slug));
@@ -32,6 +36,33 @@ const BlogDetailsPage = () => {
     console.log(slugPost);
 
     const post = slugPost[0]?.posts; // Extract the fetched post details
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const newComment = { Name: name, Email: email, Content: content };
+    
+        try {
+            const response = await fetch(`${BASE_URL}api/Posts/${post?.id}/comments`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newComment),
+            });
+    
+            if (response.ok) {
+                setName("");
+                setEmail("");
+                setContent("");
+
+                dispatch(fetchPostBySlug(slug));
+            } else {
+                console.error("Failed to post comment");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
 
     return (
         <>
@@ -84,66 +115,36 @@ const BlogDetailsPage = () => {
                             </div>
 
                             <div className="pt-5 comment-wrap">
-                                <h3 className="mb-5 heading">6 Comments</h3>
+                                <h3 className="mb-5 heading">{post?.comments?.length} Comments</h3>
                                 <ul className="comment-list">
-                                    <li className="comment">
-                                        <div className="vcard">
-                                            <img src="images/person_2.jpg" alt="Image placeholder" />
-                                        </div>
-                                        <div className="comment-body">
-                                            <h3>Jean Doe</h3>
-                                            <div className="meta">January 9, 2018 at 2:21pm</div>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas
-                                                earum impedit necessitatibus, nihil?
-                                            </p>
-                                            <p>
-                                                <a href="#" className="reply rounded">
-                                                    Reply
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </li>
-
-                                    <li className="comment">
-                                        <div className="vcard">
-                                            <img src="images/person_1.jpg" alt="Image placeholder" />
-                                        </div>
-                                        <div className="comment-body">
-                                            <h3>Jean Doe</h3>
-                                            <div className="meta">January 9, 2018 at 2:21pm</div>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas
-                                                earum impedit necessitatibus, nihil?
-                                            </p>
-                                            <p>
-                                                <a href="#" className="reply rounded">
-                                                    Reply
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </li>
+                                    {post?.comments?.map((comment, index) => (
+                                        <li className="comment" key={index}>
+                                            <div className="vcard">
+                                                <img src="../../assets/images/person_1.jpg" alt="Image placeholder" />
+                                            </div>
+                                            <div className="comment-body">
+                                                <h3>{comment.author || comment.Name}</h3>
+                                                <div className="meta">{new Date(comment.commentedAt || Date.now()).toLocaleString()}</div>
+                                                <p>{comment.content || comment.Content}</p>
+                                            </div>
+                                        </li>
+                                    ))}
                                 </ul>
 
                                 <div className="comment-form-wrap pt-5">
                                     <h3 className="mb-5">Leave a comment</h3>
-                                    <form action="#" className="p-5 bg-light">
+                                    <form onSubmit={handleSubmit} className="p-5 bg-light">
                                         <div className="form-group">
-                                            <label for="name">Name *</label>
-                                            <input type="text" className="form-control" id="name" />
+                                            <label htmlFor="name">Name *</label>
+                                            <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
                                         </div>
                                         <div className="form-group">
-                                            <label for="email">Email *</label>
-                                            <input type="email" className="form-control" id="email" />
+                                            <label htmlFor="email">Email *</label>
+                                            <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                                         </div>
                                         <div className="form-group">
-                                            <label for="website">Website</label>
-                                            <input type="url" className="form-control" id="website" />
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label for="message">Message</label>
-                                            <textarea name="" id="message" cols="30" rows="10" className="form-control"></textarea>
+                                            <label htmlFor="message">Message</label>
+                                            <textarea id="message" cols="30" rows="10" className="form-control" value={content} onChange={(e) => setContent(e.target.value)} required></textarea>
                                         </div>
                                         <div className="form-group">
                                             <input type="submit" value="Post Comment" className="btn btn-primary" />
@@ -151,6 +152,7 @@ const BlogDetailsPage = () => {
                                     </form>
                                 </div>
                             </div>
+
                         </div>
 
                         <div className="col-md-12 col-lg-4 sidebar">
