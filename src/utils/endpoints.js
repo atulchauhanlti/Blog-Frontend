@@ -14,6 +14,7 @@ export const api = {
     updatePost: "/Posts/{id}",
     deletePost: "/Posts/{id}", 
     getPostsByCategory: "/Posts/category/{category}",
+    getPostsBySlug: "/Posts/slug/{slug}",
     getPostsByTag: "/Posts/tag", 
     getPostsByUser: "/Posts/user", 
     getPostById: "/Posts/{id}",

@@ -29,6 +29,24 @@ export const fetchPostsByCategory = createAsyncThunk(
   }
 );
 
+export const fetchPostBySlug = createAsyncThunk(
+  "posts/fetchPostBySlug",
+  async (slug, { rejectWithValue }) => {
+    try {
+      const url = `${api.posts.getPostsBySlug.replace("{slug}", slug)}`;
+      const response = await API.getRequests(url);
+
+      if (!response || !response.data) {
+        throw new Error("Invalid API response");
+      }
+
+      return { slug, posts: response.data }; 
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to fetch posts by slug");
+    }
+  }
+);
+
 export const createPost = createAsyncThunk("posts/createPost", async (postData, { rejectWithValue }) => {
   try {
     const formData = new FormData();
@@ -63,6 +81,7 @@ const postsSlice = createSlice({
     travelPosts: [],
     politicsPosts: [],
     categoryPosts: [], 
+    slugPost: [], 
     status: "idle",
     error: null,
   },
@@ -112,6 +131,19 @@ const postsSlice = createSlice({
         }
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(fetchPostBySlug.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPostBySlug.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.slugPost.push(action.payload);
+      })
+      .addCase(fetchPostBySlug.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

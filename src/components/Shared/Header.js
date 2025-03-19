@@ -23,10 +23,10 @@ const Header = () => {
                             <div className="col-8 text-center">
                                 <ul className="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
                                     <li className="active"><a href="/">Home</a></li>
-                                    <li><a href="/blog/category/fresh">Fresh</a></li>
-                                    <li><a href="/blog/category/business">Business</a></li>
-                                    <li><a href="/blog/category/politics">Politics</a></li>
-                                    <li><a href="/blog/category/travel">Travel</a></li>
+                                    <li><a href="/blog/category/Fresh">Fresh</a></li>
+                                    <li><a href="/blog/category/Business">Business</a></li>
+                                    <li><a href="/blog/category/Politics">Politics</a></li>
+                                    <li><a href="/blog/category/Travel">Travel</a></li>
                                 </ul>
                             </div>
                             <div className="col-2 text-end">
