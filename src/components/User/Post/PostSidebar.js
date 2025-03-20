@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../../features/categories/categoriesSlice";
 import { fetchTags } from "../../../features/tags/tagsSlice";
+import { Link } from "react-router-dom";
 
 const PostSidebar = () => {
   const dispatch = useDispatch();
@@ -28,9 +29,9 @@ const PostSidebar = () => {
           {categories.length > 0 ? (
             categories.map((category) => (
               <li key={category.id}>
-                <a href="#">
+                <Link to={`/blog/category/${category.name}`}>
                   {category.name} <span>({category.count || 0})</span>
-                </a>
+                </Link>
               </li>
             ))
           ) : (
