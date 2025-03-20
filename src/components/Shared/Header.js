@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
   return (
@@ -18,23 +19,20 @@ const Header = () => {
                     <div className="site-navigation">
                         <div className="row g-0 align-items-center">
                             <div className="col-2">
-                                <a href="/" className="logo m-0 float-start">LTI Blogs<span className="text-primary">.</span></a>
+                                <Link to="/" className="logo m-0 float-start">LTI Blogs<span className="text-primary">.</span></Link>
                             </div>
                             <div className="col-8 text-center">
                                 <ul className="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
-                                    <li className="active"><a href="/">Home</a></li>
-                                    <li><a href="/blog/category/Fresh">Fresh</a></li>
-                                    <li><a href="/blog/category/Business">Business</a></li>
-                                    <li><a href="/blog/category/Politics">Politics</a></li>
-                                    <li><a href="/blog/category/Travel">Travel</a></li>
+                                    <li className="active"><Link to="/">Home</Link></li>
+                                    <li><Link to="/blog/category/Fresh">Fresh</Link></li>
+                                    <li><Link to="/blog/category/Business">Business</Link></li>
+                                    <li><Link to="/blog/category/Politics">Politics</Link></li>
+                                    <li><Link to="/blog/category/Travel">Travel</Link></li>
                                 </ul>
                             </div>
                             <div className="col-2 text-end">
-                                <a href="#" className="burger ms-auto float-end site-menu-toggle js-menu-toggle d-inline-block d-lg-none light">
-                                    <span></span>
-                                </a>
                                 <ul className="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
-                                    <li><a href="/login">Login</a></li>
+                                    <li><Link to="/login">Login</Link></li>
                                 </ul>
                             </div>
                         </div>

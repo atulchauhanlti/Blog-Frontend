@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchPostBySlug } from "../../features/posts/postsSlice";
-import CategoryPostList from "../../components/User/Post/CategoryPostList";
+import PostSidebar from "../../components/User/Post/PostSidebar";
 
 const BASE_URL = "http://localhost:44301/";
 
@@ -11,15 +11,22 @@ const BlogDetailsPage = () => {
     const dispatch = useDispatch();
     const { slugPost, status } = useSelector((state) => state.posts);
 
-    const [name, setName] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [content, setContent] = React.useState("");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [content, setContent] = useState("");
+    const [localComments, setLocalComments] = useState([]); 
 
     useEffect(() => {
         if (slug) {
             dispatch(fetchPostBySlug(slug));
         }
     }, [slug, dispatch]);
+
+    useEffect(() => {
+        if (slugPost && slugPost[0]) {
+            setLocalComments(slugPost[0].posts?.comments || []);
+        }
+    }, [slugPost]);
 
     if (status === "loading") {
         return <p>Loading...</p>;
@@ -33,9 +40,7 @@ const BlogDetailsPage = () => {
         return <p>No post found with the provided slug.</p>;
     }
 
-    console.log(slugPost);
-
-    const post = slugPost[0]?.posts; // Extract the fetched post details
+    const post = slugPost[0]?.posts; 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,11 +56,19 @@ const BlogDetailsPage = () => {
             });
     
             if (response.ok) {
+                const savedComment = await response.json(); 
+                
+                const formattedComment = {
+                    author: savedComment.Name || name, 
+                    content: savedComment.Content || content, 
+                    commentedAt: new Date().toISOString(),
+                };
+    
+                setLocalComments((prevComments) => [formattedComment, ...prevComments]);
+    
                 setName("");
                 setEmail("");
                 setContent("");
-
-                dispatch(fetchPostBySlug(slug));
             } else {
                 console.error("Failed to post comment");
             }
@@ -63,7 +76,7 @@ const BlogDetailsPage = () => {
             console.error("Error:", error);
         }
     };
-
+    
     return (
         <>
             <div
@@ -115,9 +128,9 @@ const BlogDetailsPage = () => {
                             </div>
 
                             <div className="pt-5 comment-wrap">
-                                <h3 className="mb-5 heading">{post?.comments?.length} Comments</h3>
+                                <h3 className="mb-5 heading">{localComments.length} Comments</h3>
                                 <ul className="comment-list">
-                                    {post?.comments?.map((comment, index) => (
+                                    {localComments.map((comment, index) => (
                                         <li className="comment" key={index}>
                                             <div className="vcard">
                                                 <img src="../../assets/images/person_1.jpg" alt="Image placeholder" />
@@ -152,82 +165,9 @@ const BlogDetailsPage = () => {
                                     </form>
                                 </div>
                             </div>
-
                         </div>
 
-                        <div className="col-md-12 col-lg-4 sidebar">
-                            <div className="sidebar-box">
-                                <h3 className="heading">Categories</h3>
-                                <ul className="categories">
-                                    <li>
-                                        <a href="#">
-                                            Food <span>(12)</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            Travel <span>(22)</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            Lifestyle <span>(37)</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            Business <span>(42)</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            Adventure <span>(14)</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="sidebar-box">
-                                <h3 className="heading">Tags</h3>
-                                <ul className="tags">
-                                    <li>
-                                        <a href="#">Travel</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Adventure</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Food</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Lifestyle</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Business</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Freelancing</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Travel</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Adventure</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Food</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Lifestyle</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Business</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Freelancing</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <PostSidebar />
                     </div>
                 </div>
             </section>
